@@ -1,0 +1,281 @@
+/* 
+Ken V PIC10A
+For viewing purposes only
+*/
+
+#include <iostream>
+#include <cmath>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+// function prototypes
+double effective_rate(double annual_rate, int num_times_compounded = 0);
+double balance(double annual_rate, double principal, double years_elapsed, int num_times_compounded = 0);
+double m_fold_time(double m, double annual_rate, int num_times_compounded = 0);
+double present_value(double target_value, double annual_rate, double years_elapsed, int num_times_compounded = 0);
+
+
+// prompts user for input, stores input and makes sure that it is an int
+int getValidInt(){
+    
+    int valid_int;
+    string invalid_input;
+    
+    // get user input
+    cin >> valid_int;
+    
+    while (cin.fail()){
+        
+        // notify user of invalid input
+        cout << "You entered a value of the wrong type! " << endl;
+        
+        // reset fail state
+        cin.clear();
+        
+        // store invalid input in buffer
+        getline(cin, invalid_input);
+        
+        // reprompt user
+        cout << "Enter an integer value this time: ";
+        cin >> valid_int;
+    }
+    
+    return valid_int;
+}
+
+// prompts user for input, stores input and makes sure that it is a double
+double getValidDouble(){
+    
+    double valid_double;
+    string invalid_input;
+    
+    // get user input
+    cin >> valid_double;
+    
+    while (cin.fail()){
+        
+        // notify user of invalid input
+        cout << "You entered a value of the wrong type! " << endl;
+        
+        // reset fail state
+        cin.clear();
+        
+        // store invalid input in buffer
+        getline(cin, invalid_input);
+        
+        // reprompt user
+        cout << "Enter a double value this time: ";
+        cin >> valid_double;
+    }
+    
+    return valid_double;
+}
+
+/*
+ calculates the effective interest rate
+ 
+ @param annual_rate type is interest rate
+ @param num_times_compounded is num_compounded, default is 0
+ 
+ returns effective interest rate
+ */
+
+double effective_rate(double annual_rate, int num_times_compounded){
+    
+    double effective_rate;
+    
+    // noncont compounded formula
+    if (num_times_compounded != 0)
+        effective_rate = pow(1+(annual_rate/static_cast<double>(num_times_compounded)), static_cast<double>(num_times_compounded))-1;
+    
+    // continuously compounded formula
+    else
+        effective_rate = exp(annual_rate)-1;
+    
+    
+    return effective_rate;
+}
+
+/*
+ calculates the balance
+ 
+ @param annual_rate type is interest rate
+ @param principal gets value of principal from main
+ @param years_elapsed gets value time_elapsed from main
+ @param num_times_compounded is num_compounded, default is 0
+ 
+ returns balance
+ */
+
+double balance(double annual_rate, double principal, double years_elapsed, int num_times_compounded){
+    
+    double balance;
+    
+    // noncont compounded formula
+    if (num_times_compounded != 0)
+        balance = principal*((effective_rate(annual_rate*years_elapsed, static_cast<double>(num_times_compounded)*years_elapsed)+1));
+    
+    // continuously compounded formula
+    else
+        balance = principal*((effective_rate(annual_rate*years_elapsed)+1));
+    
+    return balance;
+}
+
+/*
+ calculates the doubling time
+ 
+ @param m is fixed to 2
+ @param annual_rate gets value interest_rate from main
+ @param num_times_compounded is num_compounded, default is 0
+ 
+ returns doubling time
+ */
+
+double m_fold_time(double m, double annual_rate, int num_times_compounded){
+    
+    double m_fold_time;
+    
+    // doubling time formula
+    m_fold_time = log(m)/log(1+effective_rate(annual_rate));
+    
+    return m_fold_time;
+}
+
+/*
+ calculates the present value
+ 
+ @param target_value is set to 1000000
+ @param annual_rate type is interest rate from main
+ @param years_elapsed gets time_elapsed from main
+ @param num_times_compounded is num_compounded, default is 0
+ 
+ returns present value
+ */
+
+double present_value(double target_value, double annual_rate, double years_elapsed, int num_times_compounded){
+    
+    double present_value;
+    
+    // num times compounded formula
+    if (num_times_compounded != 0)
+        present_value = target_value/(effective_rate((annual_rate*years_elapsed, num_times_compounded*static_cast<int>(years_elapsed))+1));
+    
+    // continuously compounded formula
+    else
+        present_value = target_value/((effective_rate(annual_rate*years_elapsed)+1));
+    
+    return present_value;
+}
+
+
+// prints upside down hollow triangle
+void printTriangle(int height){
+    
+    // controls height, tells us which row we're in
+    for (int i = height; i > 0; i--)
+    {
+        // prints spaces to move cursor along a row
+        for (int j = 0; j < height - i; j++)
+            cout << " ";
+        
+        // prints "*" or prints space inside triangle
+        for (int k = 1; k <= i; k++)
+        {
+            // prints *
+            if (k == 1 || k == i || i == height)
+                cout << "*";
+            // prints space inside triangle
+            else
+                cout << " ";
+        }
+        cout << endl;
+    }
+    return;
+}
+
+
+int main(){
+    
+    cout << "\t\t\t\tInvestment Calculator" << endl << endl;
+    
+    // set precision to 2 for double types
+    cout << fixed << setprecision(2);
+    
+    // prompt user
+    cout << "Enter an annual interest rate: ";
+    double interest_rate;
+    
+    // function call to get input of type double, store interest rate in variable
+    interest_rate = getValidDouble();
+    
+    // prompt user
+    cout << "\nHow much principal do you want to invest? ";
+    double principal;
+    
+    // function call to get data of type double, store principal amount in variable
+    principal = getValidDouble();
+    
+    // prompt user
+    cout << "\nHow much time will elapse in years? ";
+    double time_elapsed;
+    
+    // function call to get data of type double, store time in variable
+    time_elapsed = getValidDouble();
+    
+    // prompt user
+    cout << "\nHow many times per year will interest be compounded? " <<
+    endl << "(Enter '0' for continuously compounded): ";
+    int num_times_compounded;
+    
+    // function call to get data of type int, store num times compounded in variable
+    num_times_compounded = getValidInt();
+    
+    effective_rate(interest_rate, num_times_compounded);
+    
+    double user_balance;
+    
+    // function call to calculate the balance, store balance in variable
+    user_balance = balance(interest_rate, principal, time_elapsed);
+    
+    // print to screen balance
+    cout << "\nBalance: $" << user_balance;
+    
+    double doubling_time;
+    double m = 2;
+    
+    // function call to calculate the time investment takes to multiply (double)
+    doubling_time = m_fold_time(m, interest_rate);
+    
+    // print to screen doubling time
+    cout <<"\nDoubling Time: " << doubling_time << " years.";
+    
+    // millionaire variables for present value
+    double target_value = 1000000;
+    const double MILLIONAIRE_TIME = 10;
+    double initial_value;
+    
+    // function call to calculate present value
+    initial_value = present_value(target_value, interest_rate, MILLIONAIRE_TIME);
+    
+    // print to screen present value
+    cout << "\nTo be a millionaire in 10 years using this strategy, "<<
+    endl << "you need to invest: $" << initial_value;
+    
+    // Draw a triangle portion
+    cout << "\n\n**************** Drawing a Triangle ****************" << endl;
+    
+    // prompt and store length/height input for triangle
+    cout << "\nEnter the height of a triangle: ";
+    int height;
+    height = getValidInt();
+    cout << endl;
+    
+    // function call to print triangle
+    printTriangle(height);
+    
+    return 0;
+}
+
