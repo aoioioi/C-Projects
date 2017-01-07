@@ -1,0 +1,90 @@
+/*
+Ken V PIC10A
+For viewing purposes only
+*/
+
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int main()
+{
+    cout << "ASCII Code Breaker 1.0" << endl << endl;
+    
+    // bounds for users input
+    const int MIN_ASCII_VALUE = 0;
+    const int MAX_ASCII_VALUE = 127;
+    const int MAX_EXTENDED_ASCII_VALUE = 255;
+    
+    // column specifications
+    const int ASCII_COL_WIDTH = 25;
+    const int CHAR_COL_WIDTH = 10;
+    
+    int userInt;
+    
+    // prompts user and stores users integer into a variable
+    cout << "Please enter an integer between 0 and 255: ";
+    cin >> userInt;
+    cout << endl;
+    
+    // checks if user input was within our bounds, if it was out of bounds this prompts user to re-enter a valid input
+    // exits out of loop when integer is within our range
+    while ((userInt < MIN_ASCII_VALUE) || (userInt > MAX_EXTENDED_ASCII_VALUE))
+    {
+        cout << "You entered an integer which is out of bounds. " << endl << endl;
+        cout << "Please enter an integer between 0 and 255: ";
+        cin >> userInt;
+        cout << endl;
+    }
+    
+    // prints users integer within 0-127
+    // and prints equivalent character value based on ASCII
+    if ((userInt >= MIN_ASCII_VALUE) && (userInt <= MAX_ASCII_VALUE))
+    {
+        // prints and aligns headings
+        cout << left << setw(ASCII_COL_WIDTH) << "ASCII Code"
+        << left << setw(CHAR_COL_WIDTH) << "Character"
+        << endl;
+        
+        // type cast and print
+        cout << left << setw(ASCII_COL_WIDTH)<< userInt
+        << left << setw(CHAR_COL_WIDTH) << static_cast<char>(userInt)
+        << endl;
+    }
+    
+    // prints users integer within 128-255
+    // and prints equivalent character value based on ASCII
+    else
+    {
+        // prints and aligns headings
+        cout << left << setw(ASCII_COL_WIDTH) << "Extended ASCII Code"
+        << left << setw(CHAR_COL_WIDTH) << "Character"
+        << endl;
+        
+        // type cast and print
+        cout << left << setw(ASCII_COL_WIDTH) << userInt
+        << left << setw(CHAR_COL_WIDTH) << static_cast<char>(userInt)
+        << endl;
+    }
+    
+    cout << endl;
+    
+    char userChar;
+    
+    // prompts user and stores users character in a variable
+    cout << "Please enter a character: ";
+    cin >> userChar;
+    cout << endl;
+    
+    // prints and aligns headings
+    cout << left << setw(ASCII_COL_WIDTH) << "ASCII Code"
+    << left << setw(CHAR_COL_WIDTH) << "Character"
+    << endl;
+    
+    // prints ASCII code and users character
+    cout << left << setw(ASCII_COL_WIDTH)<< static_cast<int>(userChar)
+    << left << setw(CHAR_COL_WIDTH) << userChar
+    << endl;
+    
+    return 0;
+}
