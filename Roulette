@@ -1,0 +1,238 @@
+/* 
+Ken V PIC10A
+For viewing purposes only
+*/
+
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+    
+    // fixed set of variables
+    const char QUIT = 'q';
+    const int MAX_NUMBER = 37;
+    const int DOUBLE_ZERO = MAX_NUMBER;
+    const int DEFAULT_PLAYER_NUMBER = MAX_NUMBER + 1;
+    const int EVEN_ODD_PAYOUT = 1;
+    const int STRAIGHT_UP_PAYOUT = 35;
+    
+    // variable to store users menu selection
+    char menuOption;
+    
+    // set seed to time
+    int seed = static_cast<int>(time(NULL));
+    srand(seed);
+    
+    // variables to store users inputs
+    double evenWager;
+    double oddWager;
+    double straightUpBet;
+    int slotNum;
+    
+    // stores users name
+    string name;
+    
+    // precision 2 for numbers of type double
+    cout << fixed << setprecision(2);
+    
+    // amount of money player has, starts with 1000
+    double money = 1000;
+    
+    // prompts user and stores name in variable
+    cout << "What is your name: ";
+    getline(cin, name);
+    cout << endl;
+    
+    do{
+        // print
+        cout << "Roulette 1.0" << endl << endl;
+        cout << name << ", you have $" << money << " left." << endl << endl;
+        
+        // print menu options
+        cout << "Select from the following options: " << endl << endl;
+        cout << "(a) Even Bet" <<
+        endl << "(b) Odd Bet" <<
+        endl << "(c) Straight Up Bet" <<
+        endl << "(d) Spin the Wheel" <<
+        endl << "(q) Quit" << endl;
+        
+        // prompt and store users menu selection
+        cout << endl << "Enter the letter of your choice: ";
+        cin >> menuOption;
+        cout << endl;
+        
+        switch (menuOption){
+                
+            // even bet menu option
+            case 'a': {
+                
+                // check if user bet already
+                if (evenWager > 0)
+                    cout << "Already bet! Try another option. " << endl << endl;
+                
+                // if user has not already bet, prompt user
+                else
+                {
+                    // prompt and store user input
+                    cout << "Enter an even bet: ";
+                    cin >> evenWager;
+                    
+                    // checks if bet is less than/equal to zero
+                    if (evenWager <= 0){
+                        cout << "Invalid bet! Try again. " << endl << endl << endl;
+                        evenWager = 0;
+                    }
+                    
+                    // check if bet is larger than amount of money
+                    else if (evenWager > money){
+                        cout << "Cannot bet that much! Try again. " << endl << endl << endl;
+                        evenWager = 0;
+                    }
+                    
+                    // bet is valid, store and update amount of money
+                    else{
+                        money -= evenWager;
+                        cout << endl;
+                    }
+                }
+                
+                break;
+            }   // case a braces end
+                
+            // odd bet menu option
+            case 'b': {
+                
+                // check if user bet already
+                if (oddWager > 0)
+                    cout << "Already bet! Try another option. " << endl << endl;
+                
+                // if user has not already bet, prompt user
+                else
+                {
+                    // prompt and store user input
+                    cout << "Enter an odd bet: ";
+                    cin >> oddWager;
+                    
+                    // checks if bet is less than/equal to zero
+                    if (oddWager <= 0){
+                        cout << "Invalid bet! Try again. " << endl << endl << endl;
+                        oddWager = 0;
+                    }
+                    
+                    // check if bet is larger than amount of money
+                    else if (oddWager > money){
+                        cout << "Cannot bet that much! Try again. " << endl << endl << endl;
+                        oddWager = 0;
+                    }
+                    
+                    // bet is valid, store and update amount of money
+                    else{
+                        money -= oddWager;
+                        cout << endl;
+                    }
+                }
+                
+                break;
+            }   // case b braces end
+                
+            // straight up bet menu option
+            case 'c': {
+                
+                // prompt and store straight up bet
+                cout << "Enter a straight up bet: ";
+                cin >> straightUpBet;
+                
+                // handle invalid straight up bets
+                while (straightUpBet > money || straightUpBet < 0){
+                    
+                    // bet exceeds money, prompt until bet is valid
+                    if (straightUpBet > money)
+                        while (straightUpBet > money){
+                            cout << "Cannot bet that much! Try again. " << endl;
+                            cout << "\nEnter a straight up bet: ";
+                            cin >> straightUpBet;
+                        }
+                    
+                    // bet is less than zero, prompt until bet is valid
+                    else
+                        while (straightUpBet < 0){
+                            cout << "Invalid bet! Try again. " << endl;
+                            cout << "\nEnter a straight up bet: ";
+                            cin >> straightUpBet;
+                        }
+                }   // end of inital while loop
+                
+                // prompt and store users chosen number of slot
+                cout << "Enter a number to bet on (Enter \"37\" for \"00\"): ";
+                cin >> slotNum;
+                
+                // handle invalid slot nums
+                while (slotNum < 0 || slotNum > MAX_NUMBER) {
+                    cout << "You entered an invalid number! Enter another number: ";
+                    cin >> slotNum;
+                }
+                
+                cout << endl;
+                money -= straightUpBet;
+                
+                break;
+            }   // case c braces end
+                
+                
+            // spin the wheel menu option
+            case 'd': {
+                
+                // produces random number that ball bounces into
+                int randomInt = (rand()%DEFAULT_PLAYER_NUMBER);
+                
+                cout << "The number is: " << randomInt << endl << endl;
+                
+                // print winnings, even if user did not bet
+                // winnings straight up bet
+                if (randomInt == slotNum){
+                    cout << "Winnings from Straight Up: " << STRAIGHT_UP_PAYOUT*straightUpBet << endl << endl;
+                    money += STRAIGHT_UP_PAYOUT*straightUpBet;
+                }
+                
+                // winnings even bet excluding double zero and zero
+                else if (randomInt%2 == 0 && randomInt != DOUBLE_ZERO && randomInt != 0){
+                    cout << "Winnings from Even: " << EVEN_ODD_PAYOUT*evenWager + evenWager << endl << endl;
+                    money += EVEN_ODD_PAYOUT*evenWager + evenWager;
+                }
+                
+                // winnings odd bet
+                else if (randomInt%2 != 0 || randomInt == 0){
+                    cout << "Winnings from Odd: " << EVEN_ODD_PAYOUT*oddWager + oddWager << endl << endl;
+                    money += EVEN_ODD_PAYOUT*oddWager + oddWager;
+                }
+                
+                // reset bets
+                evenWager = 0;
+                oddWager = 0;
+                straightUpBet = 0;
+                
+                // reset player slot num
+                slotNum = DEFAULT_PLAYER_NUMBER;
+                
+                break;
+            }   // case d braces end
+                
+            // quit game option
+            case QUIT: {
+                cout << "Thanks for playing, "  << name << "!" << endl;
+                break;
+            }   // case QUIT braces
+                
+        }       // switch braces end
+        
+    } while (menuOption != QUIT); // quits when user enters q as menuOption
+    
+    return 0;
+}
+
