@@ -1,0 +1,100 @@
+/*
+Ken Vega PIC10A
+For viewing purposes only
+*/
+
+#include <iostream>
+#include <string>
+#include "Card.h"
+#include "CardDeck.h"
+
+/* 
+card implementation file
+ */
+
+using namespace std;
+
+// constructor definition
+Card::Card(Rank r, Suit s)
+{
+    rank = r;
+    suit = s;
+}
+
+/*
+ member function definitions
+ */
+ string Card::toString()const{
+    
+    string description = "";
+    
+    switch(rank) {
+        case ACE:
+            description += "Ace";
+            break;
+        case TWO:
+            description += "Two";
+            break;
+        case THREE:
+            description += "Three";
+            break;
+        case FOUR:
+            description += "Four";
+            break;
+        case FIVE:
+            description += "Five";
+            break;
+        case SIX:
+            description += "Six";
+            break;
+        case SEVEN:
+            description += "Seven";
+            break;
+        case EIGHT:
+            description += "Eight";
+            break;
+        case NINE:
+            description += "Nine";
+            break;
+        case TEN:
+            description += "Ten";
+            break;
+        case JACK:
+            description += "Jack";
+            break;
+        case QUEEN:
+            description += "Queen";
+            break;
+        case KING:
+            description += "King";
+            break;
+    }
+    
+    description += " of ";
+    
+    switch(suit) {
+        case HEARTS:
+            description += "Hearts";
+            break;
+        case CLUBS:
+            description += "Clubs";
+            break;
+        case SPADES:
+            description += "Spades";
+            break;
+        case DIAMONDS:
+            description += "Diamonds";
+            break;
+    }
+    return description;
+}
+
+
+Rank Card::getRank()const{
+    return rank;
+}
+
+Suit Card::getSuit()const{
+    return suit;
+}
+
